@@ -2,8 +2,8 @@ const express = require('express');
 
 const mongoose = require('mongoose');
 const auth = require('./middleware/auth');
-
-
+const path = require('path');
+const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
 
@@ -22,7 +22,11 @@ mongoose.connect('mongodb+srv://aiman:n8Z8Lbsk6bxeyBw@cluster0.5buwv.mongodb.net
     next();
   });
   app.use(express.json());
-  
+  app.use('/images', express.static(path.join(__dirname, 'images')));
+
   app.use('/api/auth', userRoutes);
+  app.use('/api/sauces', sauceRoutes);
+
+
 
   module.exports = app;
