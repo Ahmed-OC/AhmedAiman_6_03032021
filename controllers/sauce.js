@@ -1,16 +1,23 @@
-const Sauce = require('../models/sauce');
-const fs = require('fs');
+const Sauce = require('../models/sauce'); // On importe le modele des sauces
+const fs = require('fs'); // Permet d'intéragir avec les fichiers du système, ici permet de supprimer les images
 
+
+// Permet de recupérer toutes les sauces
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
     .then(sauces => res.status(200).json(sauces))
     .catch(error => res.status(400).json({ error }))
 }
+
+// Permet de récupérer la sauce selon l'ID
 exports.getSauceById = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
     .then(sauce => res.status(200).json(sauce))
     .catch(error => res.status(404).json({error}));
 }
+
+
+// Permet de créer une sauce 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce)
     const sauce = new Sauce({
@@ -27,7 +34,10 @@ exports.createSauce = (req, res, next) => {
         .catch(error => res.status(404));
 
 }
+
+// Permet de modifier une sauce
 exports.modifySauce = (req, res, next) => {
+     // supprime l'ancienne photo si une nouvelle photo est émise lors de la modification
     if(req.file){
        Sauce.findOne({_id : req.params.id})
     .then(sauce => {
@@ -38,7 +48,7 @@ exports.modifySauce = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error })) 
     }
-    
+    // modification lorsqu'une image est présente sinon lorsque il n'y en a pas 
     const sauceObject = req.file ? 
     {
         ...JSON.parse(req.body.sauce),
@@ -49,6 +59,9 @@ exports.modifySauce = (req, res, next) => {
     .catch(error => res.status(400).json({error}));
 
 }
+
+
+// Permet de supprimer une sauce
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({_id : req.params.id})
     .then(sauce => {
@@ -63,6 +76,8 @@ exports.deleteSauce = (req, res, next) => {
     .catch(error => res.status(500).json({ error }))
 }
 
+
+// Permet de like ou dislike une sauce avec modification des listes userliked et userdisliked
 exports.likeSauce = (req, res, next) => {
     const like = req.body.like;
 

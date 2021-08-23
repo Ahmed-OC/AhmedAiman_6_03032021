@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const mongooseerrors = require('mongoose-errors'); // Permet de remonter les erreurs issue de la base de données
 
+// On crée un schéma pour les sauces
 const sauceSchema = mongoose.Schema({
   userId: {type: String, required: true},
   name: { type: String, required: true },
@@ -13,5 +15,6 @@ const sauceSchema = mongoose.Schema({
   usersLiked  : { type: [String] , required: false },
   usersDisliked  : { type: [String], required: false },
 });
-
+sauceSchema.plugin(mongooseerrors);
+// On exporte le schéma pour pouvoir l'utilliser 
 module.exports = mongoose.model('Sauce', sauceSchema);
